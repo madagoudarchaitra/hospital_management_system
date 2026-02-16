@@ -1,9 +1,20 @@
 const { Patient, User } = require('../models');
+const bcrypt = require('bcrypt');
 
 exports.create = async (req, res) => {
   try{
-    const p = await Patient.create(req.body);
-    res.json(p);
+    const { name, age, gender, address } = req.body;
+    // Create a user for the patient with the provided name
+    const pw = await bcrypt.hash('patient123', 10);
+    const [user] = await User.findOrCreate({
+      where: { email: `patient-${Date.now()}@example.com` },
+      defaults: { name, password: pw, role: 'patient' }
+    });
+    // Create patient linked to the user
+    const p = await Patient.create({ userId: user.id, age, gender, address });
+    // Return patient with user included
+    const patientWithUser = await Patient.findByPk(p.id, { include: User });
+    res.json(patientWithUser);
   }catch(err){ res.status(500).json({ message: 'Server error' }); }
 };
 
