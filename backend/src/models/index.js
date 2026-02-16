@@ -14,13 +14,21 @@ const Staff = require('./staff')(sequelize);
 // Associations
 User.hasOne(Doctor, { foreignKey: 'userId' });
 User.hasOne(Patient, { foreignKey: 'userId' });
+User.hasOne(Staff, { foreignKey: 'userId' });
 Doctor.belongsTo(User, { foreignKey: 'userId' });
 Patient.belongsTo(User, { foreignKey: 'userId' });
+Staff.belongsTo(User, { foreignKey: 'userId' });
 
 Doctor.hasMany(Appointment, { foreignKey: 'doctorId' });
 Patient.hasMany(Appointment, { foreignKey: 'patientId' });
 Appointment.belongsTo(Doctor, { foreignKey: 'doctorId' });
 Appointment.belongsTo(Patient, { foreignKey: 'patientId' });
+
+Patient.hasMany(Billing, { foreignKey: 'patientId' });
+Billing.belongsTo(Patient, { foreignKey: 'patientId' });
+
+Patient.hasMany(LabReport, { foreignKey: 'patientId' });
+LabReport.belongsTo(Patient, { foreignKey: 'patientId' });
 
 module.exports = {
   sequelize,
