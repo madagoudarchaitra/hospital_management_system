@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
-    "seed": "node src/seed.js"
+    "seed": "node src/seed.js",
+    "db:clean": "node src/cleanDatabase.js",
+    "db:fix": "node src/fixDatabase.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.0",
