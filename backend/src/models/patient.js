@@ -4,8 +4,13 @@ module.exports = (sequelize) => {
   return sequelize.define('Patient', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     userId: { type: DataTypes.INTEGER, allowNull: true },
+    name: { type: DataTypes.STRING },
     age: { type: DataTypes.INTEGER },
     gender: { type: DataTypes.STRING },
-    address: { type: DataTypes.STRING }
-  }, { tableName: 'patients' });
+    address: { type: DataTypes.STRING },
+    contact: { type: DataTypes.STRING }
+  }, { 
+    tableName: 'patients',
+    timestamps: false
+  });
 };

@@ -6,5 +6,8 @@ module.exports = (sequelize) => {
     patientId: { type: DataTypes.INTEGER, allowNull: false },
     amount: { type: DataTypes.DECIMAL(10,2), defaultValue: 0 },
     status: { type: DataTypes.ENUM('pending','paid'), defaultValue: 'pending' }
-  }, { tableName: 'billings' });
+  }, { 
+    tableName: 'billings',
+    timestamps: false
+  });
 };

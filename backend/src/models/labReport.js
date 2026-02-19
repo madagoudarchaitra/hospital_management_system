@@ -6,5 +6,8 @@ module.exports = (sequelize) => {
     patientId: { type: DataTypes.INTEGER, allowNull: false },
     reportType: { type: DataTypes.STRING },
     result: { type: DataTypes.TEXT }
-  }, { tableName: 'lab_reports' });
+  }, { 
+    tableName: 'lab_reports',
+    timestamps: false
+  });
 };

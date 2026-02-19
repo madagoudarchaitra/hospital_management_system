@@ -6,5 +6,8 @@ module.exports = (sequelize) => {
     ward: { type: DataTypes.STRING },
     number: { type: DataTypes.STRING },
     occupied: { type: DataTypes.BOOLEAN, defaultValue: false }
-  }, { tableName: 'beds' });
+  }, { 
+    tableName: 'beds',
+    timestamps: false
+  });
 };

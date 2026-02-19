@@ -51,21 +51,50 @@ export default function Users(){
       </div>
 
       {showForm && (
-        <form onSubmit={handleAdd} className="card" style={{marginBottom:16, display:'grid', gridTemplateColumns:'1fr 1fr 160px 140px', gap:10, alignItems:'center'}}>
-          <input required placeholder="Name" value={form.name} onChange={e=>setForm(f=>({...f, name:e.target.value}))} />
-          <input required placeholder="Email" value={form.email} onChange={e=>setForm(f=>({...f, email:e.target.value}))} />
-          <select value={form.role} onChange={e=>setForm(f=>({...f, role:e.target.value}))}>
-            <option value="admin">admin</option>
-            <option value="doctor">doctor</option>
-            <option value="patient">patient</option>
-            <option value="staff">staff</option>
-          </select>
-          <div style={{display:'flex', gap:8}}>
-            <input placeholder="Password (optional)" value={form.password} onChange={e=>setForm(f=>({...f, password:e.target.value}))} />
-            <button className="btn" type="submit">Create</button>
-            <button type="button" className="btn" style={{background:'#6c757d'}} onClick={()=>{ setShowForm(false); setForm({ name: '', email: '', role: 'patient', password: '' }); }}>Cancel</button>
-          </div>
-        </form>
+        <div className="card" style={{padding:20, marginBottom:20}}>
+          <h4>Add New User</h4>
+          <form onSubmit={handleAdd} autoComplete="off">
+            <input 
+              required 
+              placeholder="👤 Name" 
+              value={form.name} 
+              onChange={e=>setForm(f=>({...f, name:e.target.value}))} 
+              style={{marginBottom:10, padding:8, width:'100%', boxSizing:'border-box'}}
+              autoComplete="off"
+            />
+            <input 
+              required 
+              type="text"
+              placeholder="📧 Email" 
+              value={form.email} 
+              onChange={e=>setForm(f=>({...f, email:e.target.value}))} 
+              style={{marginBottom:10, padding:8, width:'100%', boxSizing:'border-box'}}
+              autoComplete="off"
+            />
+            <select 
+              value={form.role} 
+              onChange={e=>setForm(f=>({...f, role:e.target.value}))}
+              style={{marginBottom:10, padding:8, width:'100%', boxSizing:'border-box'}}
+            >
+              <option value="patient">👨‍⚕️ Patient</option>
+              <option value="doctor">🩺 Doctor</option>
+              <option value="staff">👩‍⚕️ Staff</option>
+              <option value="admin">🔐 Admin</option>
+            </select>
+            <input 
+              type="text"
+              placeholder="🔒 Password" 
+              value={form.password} 
+              onChange={e=>setForm(f=>({...f, password:e.target.value}))} 
+              style={{marginBottom:10, padding:8, width:'100%', boxSizing:'border-box'}}
+              autoComplete="new-password"
+            />
+            <div style={{display:'flex', gap:10}}>
+              <button className="btn" type="submit">Save</button>
+              <button type="button" className="btn" style={{background:'#ccc'}} onClick={()=>{ setShowForm(false); setForm({ name: '', email: '', role: 'patient', password: '' }); }}>Cancel</button>
+            </div>
+          </form>
+        </div>
       )}
       {loading ? <div>Loading...</div> : (
         <div className="card">

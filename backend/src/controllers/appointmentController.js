@@ -5,7 +5,13 @@ exports.create = async (req, res) => {
 };
 
 exports.list = async (req, res) => {
-  try{ const list = await Appointment.findAll(); res.json(list); }catch(err){ res.status(500).json({ message: 'Server error' }); }
+  try{ 
+    const list = await Appointment.findAll(); 
+    res.json(list); 
+  }catch(err){ 
+    console.error('Error listing appointments:', err);
+    res.status(500).json({ message: 'Server error', error: err.message }); 
+  }
 };
 
 exports.get = async (req, res) => {

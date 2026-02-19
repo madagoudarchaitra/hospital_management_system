@@ -15,11 +15,13 @@ const PORT = process.env.PORT || 5000;
 async function start(){
   try{
     await sequelize.authenticate();
-    console.log('DB connected');
-    await sequelize.sync({ alter: true });
-    app.listen(PORT, ()=> console.log('Server running on port', PORT));
+    console.log('✅ Database connected');
+    // Use force: false to avoid altering existing tables
+    await sequelize.sync({ force: false });
+    console.log('✅ Models synced');
+    app.listen(PORT, ()=> console.log(`🚀 Server running on port ${PORT}`));
   }catch(err){
-    console.error(err);
+    console.error('❌ Error starting server:', err.message);
     process.exit(1);
   }
 }

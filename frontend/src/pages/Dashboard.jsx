@@ -20,9 +20,9 @@ export default function Dashboard(){
     <div style={{paddingBottom: 20}}>
       <div style={{marginBottom:32}}>
         <h2 style={{fontSize:32, fontWeight:800, marginBottom:8, background:'linear-gradient(135deg,#0ea5e9,#06b6d4)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text'}}>
-          Welcome to HMS 🏥
+          Welcome to Hospital Management System 🏥
         </h2>
-        <p style={{color:'var(--muted)', fontSize:16, margin:'0'}}>Hospital Management System Dashboard</p>
+        <p style={{color:'var(--muted)', fontSize:16, margin:'0'}}>Your Complete Healthcare Management Solution</p>
         <p style={{color:'var(--muted)', fontSize:13, margin:'4px 0 0 0'}}>Monitor key metrics and manage operations efficiently</p>
       </div>
 
