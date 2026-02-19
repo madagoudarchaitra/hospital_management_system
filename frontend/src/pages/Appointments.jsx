@@ -11,6 +11,7 @@ export default function Appointments(){
   const [list, setList] = useState([]);
   const [filteredList, setFilteredList] = useState([]);
   const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({doctorId:'', patientId:'', date:'', status:'scheduled'});
   const [showEditForm, setShowEditForm] = useState(false);
@@ -28,14 +29,19 @@ export default function Appointments(){
   useEffect(()=>{ load(); }, []);
 
   useEffect(() => {
-    const filtered = list.filter(a => 
+    let filtered = list.filter(a => 
       (a.doctor || '').toLowerCase().includes(search.toLowerCase()) ||
       (a.patient || '').toLowerCase().includes(search.toLowerCase()) ||
       (a.status || '').toLowerCase().includes(search.toLowerCase()) ||
       new Date(a.date).toLocaleString().toLowerCase().includes(search.toLowerCase())
     );
+    
+    if (statusFilter !== 'all') {
+      filtered = filtered.filter(a => a.status === statusFilter);
+    }
+    
     setFilteredList(filtered);
-  }, [search, list]);
+  }, [search, list, statusFilter]);
 
   const handleAdd = async (e) => { 
     e.preventDefault(); 
@@ -97,55 +103,155 @@ export default function Appointments(){
         <button className="btn" onClick={()=>setShowForm(!showForm)} style={{padding:'12px 20px', fontSize:14}}>✨ + Add Appointment</button>
       </div>
 
-      <div style={{marginBottom:24, display:'flex', gap:12, alignItems:'flex-end'}}>
-        <div style={{flex:1, maxWidth:400}}>
-          <input 
-            type="text" 
-            placeholder="🔍 Search by doctor, patient, or status..." 
-            value={search} 
-            onChange={(e)=>setSearch(e.target.value)}
-          />
+      <div style={{marginBottom:24}}>
+        <div style={{display:'flex', gap:12, marginBottom:16, flexWrap:'wrap'}}>
+          <button 
+            className="btn" 
+            onClick={()=>setStatusFilter('all')}
+            style={{
+              background: statusFilter === 'all' ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' : '#e2e8f0',
+              color: statusFilter === 'all' ? 'white' : '#64748b',
+              padding: '10px 20px',
+              fontSize: 14,
+              fontWeight: 600
+            }}
+          >
+            📊 All
+          </button>
+          <button 
+            className="btn" 
+            onClick={()=>setStatusFilter('scheduled')}
+            style={{
+              background: statusFilter === 'scheduled' ? '#f59e0b' : '#e2e8f0',
+              color: statusFilter === 'scheduled' ? 'white' : '#64748b',
+              padding: '10px 20px',
+              fontSize: 14,
+              fontWeight: 600
+            }}
+          >
+            📅 Scheduled
+          </button>
+          <button 
+            className="btn" 
+            onClick={()=>setStatusFilter('completed')}
+            style={{
+              background: statusFilter === 'completed' ? '#10b981' : '#e2e8f0',
+              color: statusFilter === 'completed' ? 'white' : '#64748b',
+              padding: '10px 20px',
+              fontSize: 14,
+              fontWeight: 600
+            }}
+          >
+            ✅ Completed
+          </button>
+          <button 
+            className="btn" 
+            onClick={()=>setStatusFilter('cancelled')}
+            style={{
+              background: statusFilter === 'cancelled' ? '#ef4444' : '#e2e8f0',
+              color: statusFilter === 'cancelled' ? 'white' : '#64748b',
+              padding: '10px 20px',
+              fontSize: 14,
+              fontWeight: 600
+            }}
+          >
+            ❌ Cancelled
+          </button>
         </div>
-        <div style={{color:'var(--muted)', fontSize:12, background:'rgba(14,165,233,0.08)', padding:'8px 12px', borderRadius:8, fontWeight:600}}>
-          📊 {filteredList.length} result{filteredList.length !== 1 ? 's' : ''}
+        <div style={{display:'flex', gap:12, alignItems:'flex-end'}}>
+          <div style={{flex:1, maxWidth:400}}>
+            <input 
+              type="text" 
+              placeholder="🔍 Search by doctor, patient, or status..." 
+              value={search} 
+              onChange={(e)=>setSearch(e.target.value)}
+            />
+          </div>
+          <div style={{color:'var(--muted)', fontSize:12, background:'rgba(14,165,233,0.08)', padding:'8px 12px', borderRadius:8, fontWeight:600}}>
+            📊 {filteredList.length} result{filteredList.length !== 1 ? 's' : ''}
+          </div>
         </div>
       </div>
 
       {showForm && (
-        <div className="card" style={{padding:24, marginBottom:24, background:'linear-gradient(135deg, rgba(14,165,233,0.05), rgba(6,182,212,0.05))', border:'1px solid rgba(14,165,233,0.1)'}}>
-          <h4 style={{marginTop:0}}>➕ Add New Appointment</h4>
-          <form onSubmit={handleAdd} style={{display:'flex', flexDirection:'column', gap:14}}>
-            <input placeholder="👨‍⚕️ Doctor ID" value={form.doctorId} onChange={e=>setForm({...form, doctorId: e.target.value})} required />
-            <input placeholder="👤 Patient ID" value={form.patientId} onChange={e=>setForm({...form, patientId: e.target.value})} required />
-            <input type="datetime-local" value={form.date ? new Date(form.date).toISOString().slice(0,16) : ''} onChange={e=>setForm({...form, date: new Date(e.target.value).toISOString()})} required />
-            <select value={form.status} onChange={e=>setForm({...form, status: e.target.value})}>
+        <div className="card" style={{padding:20, marginBottom:24, background:'white', border:'1px solid rgba(14,165,233,0.2)', boxShadow:'0 4px 12px rgba(0,0,0,0.08)'}}>
+          <h4 style={{marginTop:0, marginBottom:16, fontSize:16, fontWeight:700}}>➕ Add New Appointment</h4>
+          <form onSubmit={handleAdd} style={{display:'flex', flexDirection:'column', gap:12}}>
+            <input 
+              placeholder="👨‍⚕️ Doctor ID" 
+              value={form.doctorId} 
+              onChange={e=>setForm({...form, doctorId: e.target.value})} 
+              required 
+              style={{width:'100%', padding:'8px 10px', border:'1px solid #e2e8f0', borderRadius:6, fontSize:13}}
+            />
+            <input 
+              placeholder="👤 Patient ID" 
+              value={form.patientId} 
+              onChange={e=>setForm({...form, patientId: e.target.value})} 
+              required 
+              style={{width:'100%', padding:'8px 10px', border:'1px solid #e2e8f0', borderRadius:6, fontSize:13}}
+            />
+            <input 
+              type="datetime-local" 
+              value={form.date ? new Date(form.date).toISOString().slice(0,16) : ''} 
+              onChange={e=>setForm({...form, date: new Date(e.target.value).toISOString()})} 
+              required 
+              style={{width:'100%', padding:'8px 10px', border:'1px solid #e2e8f0', borderRadius:6, fontSize:13}}
+            />
+            <select 
+              value={form.status} 
+              onChange={e=>setForm({...form, status: e.target.value})}
+              style={{width:'100%', padding:'8px 10px', border:'1px solid #e2e8f0', borderRadius:6, fontSize:13}}
+            >
               <option value="scheduled">📅 Scheduled</option>
               <option value="completed">✓ Completed</option>
               <option value="cancelled">✕ Cancelled</option>
             </select>
-            <div style={{display:'flex', gap:10}}>
-              <button className="btn" type="submit" style={{flex:1}}>Save Appointment</button>
-              <button className="btn btn-secondary" type="button" onClick={()=>setShowForm(false)} style={{flex:1}}>Cancel</button>
+            <div style={{display:'flex', gap:8, marginTop:4}}>
+              <button className="btn" type="submit" style={{padding:'6px 12px', fontSize:12}}>Save</button>
+              <button className="btn btn-secondary" type="button" onClick={()=>setShowForm(false)} style={{padding:'6px 12px', fontSize:12, background:'#e2e8f0', color:'#64748b'}}>Cancel</button>
             </div>
           </form>
         </div>
       )}
 
       {showEditForm && (
-        <div className="card" style={{padding:24, marginBottom:24, background:'linear-gradient(135deg, rgba(245,158,11,0.05), rgba(245,158,11,0.05))', border:'1px solid rgba(245,158,11,0.1)'}}>
-          <h4 style={{marginTop:0}}>✏️ Edit Appointment</h4>
-          <form onSubmit={handleSaveEdit} style={{display:'flex', flexDirection:'column', gap:14}}>
-            <input placeholder="👨‍⚕️ Doctor ID" value={editForm.doctorId} onChange={e=>setEditForm({...editForm, doctorId: e.target.value})} required />
-            <input placeholder="👤 Patient ID" value={editForm.patientId} onChange={e=>setEditForm({...editForm, patientId: e.target.value})} required />
-            <input type="datetime-local" value={editForm.date} onChange={e=>setEditForm({...editForm, date: e.target.value})} required />
-            <select value={editForm.status} onChange={e=>setEditForm({...editForm, status: e.target.value})}>
+        <div className="card" style={{padding:20, marginBottom:24, background:'white', border:'1px solid rgba(245,158,11,0.2)', boxShadow:'0 4px 12px rgba(0,0,0,0.08)'}}>
+          <h4 style={{marginTop:0, marginBottom:16, fontSize:16, fontWeight:700}}>✏️ Edit Appointment</h4>
+          <form onSubmit={handleSaveEdit} style={{display:'flex', flexDirection:'column', gap:12}}>
+            <input 
+              placeholder="👨‍⚕️ Doctor ID" 
+              value={editForm.doctorId} 
+              onChange={e=>setEditForm({...editForm, doctorId: e.target.value})} 
+              required 
+              style={{width:'100%', padding:'8px 10px', border:'1px solid #e2e8f0', borderRadius:6, fontSize:13}}
+            />
+            <input 
+              placeholder="👤 Patient ID" 
+              value={editForm.patientId} 
+              onChange={e=>setEditForm({...editForm, patientId: e.target.value})} 
+              required 
+              style={{width:'100%', padding:'8px 10px', border:'1px solid #e2e8f0', borderRadius:6, fontSize:13}}
+            />
+            <input 
+              type="datetime-local" 
+              value={editForm.date} 
+              onChange={e=>setEditForm({...editForm, date: e.target.value})} 
+              required 
+              style={{width:'100%', padding:'8px 10px', border:'1px solid #e2e8f0', borderRadius:6, fontSize:13}}
+            />
+            <select 
+              value={editForm.status} 
+              onChange={e=>setEditForm({...editForm, status: e.target.value})}
+              style={{width:'100%', padding:'8px 10px', border:'1px solid #e2e8f0', borderRadius:6, fontSize:13}}
+            >
               <option value="scheduled">📅 Scheduled</option>
               <option value="completed">✓ Completed</option>
               <option value="cancelled">✕ Cancelled</option>
             </select>
-            <div style={{display:'flex', gap:10}}>
-              <button className="btn" type="submit" style={{flex:1, background:'#f59e0b'}}>Update Appointment</button>
-              <button className="btn btn-secondary" type="button" onClick={()=>setShowEditForm(false)} style={{flex:1}}>Cancel</button>
+            <div style={{display:'flex', gap:8, marginTop:4}}>
+              <button className="btn" type="submit" style={{padding:'6px 12px', fontSize:12, background:'#f59e0b'}}>Update</button>
+              <button className="btn btn-secondary" type="button" onClick={()=>setShowEditForm(false)} style={{padding:'6px 12px', fontSize:12, background:'#e2e8f0', color:'#64748b'}}>Cancel</button>
             </div>
           </form>
         </div>

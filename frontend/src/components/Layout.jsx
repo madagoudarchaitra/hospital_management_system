@@ -69,8 +69,7 @@ export default function Layout({ children }){
         <div className="brand-section">
           <div className="brand-icon">🏥</div>
           <div>
-            <div className="brand">HMS</div>
-            <div className="brand-subtitle">Hospital Management</div>
+            <div className="brand">Hospital Management System</div>
           </div>
         </div>
         <div className="header-actions">
@@ -83,7 +82,7 @@ export default function Layout({ children }){
 
       <div className={`layout-wrapper ${collapsed ? 'collapsed' : ''}`}>
         <aside className={`sidebar ${collapsed ? 'collapsed' : 'visible'}`}>
-          <div className="sidebar-brand">HMS</div>
+          <div className="sidebar-brand">Hospital Management System</div>
           <nav className="sidebar-nav">
             {links.map(([to, label, icon]) => (
               <NavLink key={to} to={to} className={({isActive})=>"nav-link" + (isActive? ' active':'')} onClick={() => {

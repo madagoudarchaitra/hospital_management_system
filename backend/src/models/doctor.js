@@ -9,5 +9,8 @@ module.exports = (sequelize) => {
     phone: { type: DataTypes.STRING },
     qualifications: { type: DataTypes.STRING },
     experience: { type: DataTypes.TEXT }
-  }, { tableName: 'doctors' });
+  }, { 
+    tableName: 'doctors',
+    timestamps: false
+  });
 };

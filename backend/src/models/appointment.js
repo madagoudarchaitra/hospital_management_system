@@ -7,5 +7,8 @@ module.exports = (sequelize) => {
     patientId: { type: DataTypes.INTEGER, allowNull: false },
     date: { type: DataTypes.DATE, allowNull: false },
     status: { type: DataTypes.ENUM('scheduled','completed','cancelled'), defaultValue: 'scheduled' }
-  }, { tableName: 'appointments' });
+  }, { 
+    tableName: 'appointments',
+    timestamps: false
+  });
 };

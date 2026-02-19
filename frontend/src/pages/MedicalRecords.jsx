@@ -29,7 +29,9 @@ export default function MedicalRecords(){
       ...form,
       recordDate: new Date().toISOString() 
     };
-    setList([...list, newRecord]);
+    const updatedList = [...list, newRecord];
+    setList(updatedList);
+    setFilteredList(updatedList);
     setForm({ patientId: '', patientName: '', diagnosis: '', treatment: '', notes: '', doctor: '' });
     setShowForm(false);
   };

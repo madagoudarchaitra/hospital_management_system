@@ -8,6 +8,7 @@ export default function Beds(){
   const [list, setList] = useState([]);
   const [filteredList, setFilteredList] = useState([]);
   const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ward:'', number:'', occupied:false});
   const [showEditForm, setShowEditForm] = useState(false);
@@ -24,13 +25,20 @@ export default function Beds(){
   useEffect(()=>{ load(); }, []);
 
   useEffect(() => {
-    const filtered = list.filter(b => 
+    let filtered = list.filter(b => 
       (b.ward || '').toLowerCase().includes(search.toLowerCase()) ||
       (b.number || '').toString().includes(search) ||
       (b.occupied ? 'occupied' : 'free').includes(search.toLowerCase())
     );
+    
+    if (statusFilter === 'occupied') {
+      filtered = filtered.filter(b => b.occupied === true);
+    } else if (statusFilter === 'free') {
+      filtered = filtered.filter(b => b.occupied === false);
+    }
+    
     setFilteredList(filtered);
-  }, [search, list]);
+  }, [search, list, statusFilter]);
 
   const handleAdd = async (e) => { 
     e.preventDefault(); 
@@ -59,6 +67,47 @@ export default function Beds(){
       </div>
 
       <div style={{marginBottom:20}}>
+        <div style={{display:'flex', gap:12, marginBottom:16, flexWrap:'wrap'}}>
+          <button 
+            className="btn" 
+            onClick={()=>setStatusFilter('all')}
+            style={{
+              background: statusFilter === 'all' ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' : '#e2e8f0',
+              color: statusFilter === 'all' ? 'white' : '#64748b',
+              padding: '10px 20px',
+              fontSize: 14,
+              fontWeight: 600
+            }}
+          >
+            📊 All Beds
+          </button>
+          <button 
+            className="btn" 
+            onClick={()=>setStatusFilter('free')}
+            style={{
+              background: statusFilter === 'free' ? '#10b981' : '#e2e8f0',
+              color: statusFilter === 'free' ? 'white' : '#64748b',
+              padding: '10px 20px',
+              fontSize: 14,
+              fontWeight: 600
+            }}
+          >
+            ✅ Free
+          </button>
+          <button 
+            className="btn" 
+            onClick={()=>setStatusFilter('occupied')}
+            style={{
+              background: statusFilter === 'occupied' ? '#ef4444' : '#e2e8f0',
+              color: statusFilter === 'occupied' ? 'white' : '#64748b',
+              padding: '10px 20px',
+              fontSize: 14,
+              fontWeight: 600
+            }}
+          >
+            🔴 Occupied
+          </button>
+        </div>
         <input 
           type="text" 
           placeholder="🔍 Search by ward, bed number, or status..." 

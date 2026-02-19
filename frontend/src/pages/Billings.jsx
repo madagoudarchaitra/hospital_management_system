@@ -8,8 +8,9 @@ export default function Billings(){
   const [list, setList] = useState([]);
   const [filteredList, setFilteredList] = useState([]);
   const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({patientId:'', amount:''});
+  const [form, setForm] = useState({patientId:'', amount:'', status:'pending'});
   const nav = useNavigate();
 
   const load = async () => { 
@@ -21,20 +22,25 @@ export default function Billings(){
   useEffect(()=>{ load(); }, []);
 
   useEffect(() => {
-    const filtered = list.filter(b => 
+    let filtered = list.filter(b => 
       (b.patient || '').toLowerCase().includes(search.toLowerCase()) ||
       (b.status || '').toLowerCase().includes(search.toLowerCase()) ||
       (b.amount || '').toString().includes(search)
     );
+    
+    if (statusFilter !== 'all') {
+      filtered = filtered.filter(b => b.status === statusFilter);
+    }
+    
     setFilteredList(filtered);
-  }, [search, list]);
+  }, [search, list, statusFilter]);
 
   const handleAdd = async (e) => { 
     e.preventDefault(); 
     const t = localStorage.getItem('token'); 
     const res = await post('/billings', form, t); 
     if(res.status===200){ 
-      setForm({patientId:'', amount:''}); 
+      setForm({patientId:'', amount:'', status:'pending'}); 
       setShowForm(false);
       load(); 
     } else alert(res.data.message || 'Error'); 
@@ -56,6 +62,47 @@ export default function Billings(){
       </div>
 
       <div style={{marginBottom:20}}>
+        <div style={{display:'flex', gap:12, marginBottom:16, flexWrap:'wrap'}}>
+          <button 
+            className="btn" 
+            onClick={()=>setStatusFilter('all')}
+            style={{
+              background: statusFilter === 'all' ? 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' : '#e2e8f0',
+              color: statusFilter === 'all' ? 'white' : '#64748b',
+              padding: '10px 20px',
+              fontSize: 14,
+              fontWeight: 600
+            }}
+          >
+            📊 All
+          </button>
+          <button 
+            className="btn" 
+            onClick={()=>setStatusFilter('paid')}
+            style={{
+              background: statusFilter === 'paid' ? '#10b981' : '#e2e8f0',
+              color: statusFilter === 'paid' ? 'white' : '#64748b',
+              padding: '10px 20px',
+              fontSize: 14,
+              fontWeight: 600
+            }}
+          >
+            ✅ Paid
+          </button>
+          <button 
+            className="btn" 
+            onClick={()=>setStatusFilter('pending')}
+            style={{
+              background: statusFilter === 'pending' ? '#f59e0b' : '#e2e8f0',
+              color: statusFilter === 'pending' ? 'white' : '#64748b',
+              padding: '10px 20px',
+              fontSize: 14,
+              fontWeight: 600
+            }}
+          >
+            ⏳ Pending
+          </button>
+        </div>
         <input 
           type="text" 
           placeholder="🔍 Search by patient, amount, or status..." 
@@ -74,6 +121,49 @@ export default function Billings(){
           <form onSubmit={handleAdd}>
             <input placeholder="Patient ID" value={form.patientId} onChange={e=>setForm({...form, patientId: e.target.value})} required style={{marginBottom:10, padding:8, width:'100%', boxSizing:'border-box'}} />
             <input type="number" step="0.01" placeholder="Amount" value={form.amount} onChange={e=>setForm({...form, amount: e.target.value})} required style={{marginBottom:10, padding:8, width:'100%', boxSizing:'border-box'}} />
+            
+            <div style={{marginBottom:16}}>
+              <label style={{display:'block', marginBottom:8, fontWeight:600, fontSize:14}}>Status:</label>
+              <div style={{display:'flex', gap:8}}>
+                <button 
+                  type="button"
+                  onClick={()=>setForm({...form, status:'pending'})}
+                  style={{
+                    padding:'6px 10px',
+                    border:'2px solid',
+                    borderColor: form.status === 'pending' ? '#f59e0b' : '#e2e8f0',
+                    background: form.status === 'pending' ? '#fef3c7' : 'white',
+                    color: form.status === 'pending' ? '#92400e' : '#64748b',
+                    borderRadius:6,
+                    cursor:'pointer',
+                    fontWeight:600,
+                    fontSize:12,
+                    transition:'all 0.2s'
+                  }}
+                >
+                  ⏳ Pending
+                </button>
+                <button 
+                  type="button"
+                  onClick={()=>setForm({...form, status:'paid'})}
+                  style={{
+                    padding:'6px 10px',
+                    border:'2px solid',
+                    borderColor: form.status === 'paid' ? '#10b981' : '#e2e8f0',
+                    background: form.status === 'paid' ? '#d1fae5' : 'white',
+                    color: form.status === 'paid' ? '#065f46' : '#64748b',
+                    borderRadius:6,
+                    cursor:'pointer',
+                    fontWeight:600,
+                    fontSize:12,
+                    transition:'all 0.2s'
+                  }}
+                >
+                  ✅ Paid
+                </button>
+              </div>
+            </div>
+
             <div style={{display:'flex', gap:10}}>
               <button type="submit" className="btn">Save</button>
               <button type="button" className="btn" style={{background:'#ccc'}} onClick={()=>setShowForm(false)}>Cancel</button>
